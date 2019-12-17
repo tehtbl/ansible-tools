@@ -2,8 +2,8 @@
 galaxy_info:
   author: https://github.com/tehtbl
   role_name: {{ role_name }}
-  description: Install and configure {{ role_name }} on a system.
-  license: GNU General Public License v3.0
+  description: {{ description }}
+  license: MIT
   company: None
   min_ansible_version: 2.8
 
@@ -18,8 +18,9 @@ galaxy_info:
         - bionic
 
   galaxy_tags:
-    - {{ role_name }}
-    - installer
+    {% for t in tags %}
+    - {{ t }}
+    {% endfor %}
     - client
     - server
     - system

@@ -1,5 +1,5 @@
 ---
-base_urls:
+urls:
   travis: https://travis-ci.org/tehtbl/{{ base_name }}
   galaxy: https://galaxy.ansible.com/tehtbl/{{ role_name }}
   github:
@@ -7,15 +7,79 @@ base_urls:
     git: git@github.com:tehtbl/{{ base_name }}.git
 
 roles:
-  - galaxy_id: 44496
-    role_name: "bootstrap"
-    base_name: "ansible-role-bootstrap"
+  - role_name: "base_packages"
+    description: Install and configure base packages on your system.
+    requirements:
+      - tehtbl.bootstrap
+      - tehtbl.update
+      - tehtbl.reboot
+    tags: []
+
+  - role_name: "bootstrap"
     description: Prepare your Debian and Ubuntu Systems for Ansible.
     requirements: []
-  - galaxy_id: 44923
-    role_name: "common"
-    base_name: "ansible-role-common"
+    tags:
+      - bootstrap
+
+  - role_name: "common"
     description: Configure all common things on your system.
     requirements:
       - tehtbl.bootstrap
       - tehtbl.reboot
+    tags: []
+
+  - role_name: "cron"
+    description: Install cron and schedule jobs on a system.
+    requirements:
+      - tehtbl.bootstrap
+    tags:
+      - cron
+      - schedule
+
+  - role_name: "deployment_user"
+    description: Install and configure a special deployment user on your system.
+    requirements:
+      - tehtbl.bootstrap
+      - tehtbl.ssh_server
+    tags:
+      - deployment
+
+  - role_name: "ntp"
+    description: Install and configure NTP on your system.
+    requirements:
+      - tehtbl.bootstrap
+      - tehtbl.cron
+    tags:
+      - ntp
+      - ntpd
+
+  - role_name: "reboot"
+    description: Reboot your system if needed.
+    requirements:
+      - tehtbl.bootstrap
+    tags:
+      - reboot
+
+  - role_name: "ssh_server"
+    description: Install and configure an openssh-server on your system.
+    requirements:
+      - tehtbl.bootstrap
+    tags:
+      - ssh
+      - sshd
+
+  - role_name: "swap"
+    description: Install and configure a swap space on your system.
+    requirements:
+      - tehtbl.bootstrap
+    tags:
+      - swap
+
+  - role_name: "update"
+    description: Install updates on your system.
+    requirements:
+      - tehtbl.bootstrap
+      - tehtbl.reboot
+    tags:
+      - updating
+      - update

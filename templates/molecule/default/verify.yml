@@ -1,9 +1,0 @@
----
-- name: Verify
-  hosts: all
-  become: false
-  gather_facts: true
-
-  tasks:
-    - name: test connection
-      ping:
