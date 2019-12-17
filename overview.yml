@@ -7,7 +7,8 @@ urls:
     git: git@github.com:tehtbl/{{ base_name }}.git
 
 roles:
-  - role_name: "base_packages"
+  - galaxy_id: 45211
+    role_name: "base_packages"
     description: Install and configure base packages on your system.
     requirements:
       - tehtbl.bootstrap
@@ -15,20 +16,23 @@ roles:
       - tehtbl.reboot
     tags: []
 
-  - role_name: "bootstrap"
+  - galaxy_id: 44496
+    role_name: "bootstrap"
     description: Prepare your Debian and Ubuntu Systems for Ansible.
     requirements: []
     tags:
       - bootstrap
 
-  - role_name: "common"
+  - galaxy_id: 44923
+    role_name: "common"
     description: Configure all common things on your system.
     requirements:
       - tehtbl.bootstrap
       - tehtbl.reboot
     tags: []
 
-  - role_name: "cron"
+  - galaxy_id: 44971
+    role_name: "cron"
     description: Install cron and schedule jobs on a system.
     requirements:
       - tehtbl.bootstrap
@@ -36,7 +40,8 @@ roles:
       - cron
       - schedule
 
-  - role_name: "deployment_user"
+  - galaxy_id: 45338
+    role_name: "deployment_user"
     description: Install and configure a special deployment user on your system.
     requirements:
       - tehtbl.bootstrap
@@ -44,7 +49,8 @@ roles:
     tags:
       - deployment
 
-  - role_name: "ntp"
+  - galaxy_id: 44972
+    role_name: "ntp"
     description: Install and configure NTP on your system.
     requirements:
       - tehtbl.bootstrap
@@ -53,14 +59,16 @@ roles:
       - ntp
       - ntpd
 
-  - role_name: "reboot"
+  - galaxy_id: 44922
+    role_name: "reboot"
     description: Reboot your system if needed.
     requirements:
       - tehtbl.bootstrap
     tags:
       - reboot
 
-  - role_name: "ssh_server"
+  - galaxy_id: 45336
+    role_name: "ssh_server"
     description: Install and configure an openssh-server on your system.
     requirements:
       - tehtbl.bootstrap
@@ -68,14 +76,16 @@ roles:
       - ssh
       - sshd
 
-  - role_name: "swap"
+  - galaxy_id: 45034
+    role_name: "swap"
     description: Install and configure a swap space on your system.
     requirements:
       - tehtbl.bootstrap
     tags:
       - swap
 
-  - role_name: "update"
+  - galaxy_id: 44969
+    role_name: "update"
     description: Install updates on your system.
     requirements:
       - tehtbl.bootstrap

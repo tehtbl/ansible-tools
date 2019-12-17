@@ -1,10 +1,10 @@
 <!-- get id via: ansible-galaxy info tehtbl.{{ role_name }} | grep -i "id:" -->
-<a href="https://galaxy.ansible.com/tehtbl/{{ role_name }}"><img src="https://img.shields.io/ansible/role/44496"/></a> <a href="https://galaxy.ansible.com/tehtbl/{{ role_name }}"><img src="https://img.shields.io/ansible/quality/44496"/></a> <a href="https://travis-ci.org/tehtbl/ansible-role-{{ role_name }}"><img src="https://travis-ci.org/tehtbl/ansible-role-{{ role_name }}.svg?branch=master" alt="Build status"/></a>
+<a href="https://galaxy.ansible.com/tehtbl/{{ role_name }}"><img src="https://img.shields.io/ansible/role/{{ galaxy_id }}"/></a> <a href="https://galaxy.ansible.com/tehtbl/{{ role_name }}"><img src="https://img.shields.io/ansible/quality/{{ galaxy_id }}"/></a> <a href="https://travis-ci.org/tehtbl/ansible-role-{{ role_name }}"><img src="https://travis-ci.org/tehtbl/ansible-role-{{ role_name }}.svg?branch=master" alt="Build status"/></a>
 
 Role Description
 ================
 
-Install and configure {{ role_name }} on a system.
+{{ description.content }}
 
 Example Playbook
 ================
@@ -12,50 +12,46 @@ Example Playbook
 This example is taken from `molecule/default/playbook.yml` and is tested on each push, pull request and release.
 
 ```yaml
----
-# ------------------------------------------------------------------------
-# Install and configure {{ role_name }}
-# ------------------------------------------------------------------------
-- name: {{ role_name }}
-  hosts: all
-  become: true
-  gather_facts: false
+{{ example.content | b64decode | regex_replace('ansible-role-', 'tehtbl.') }}
 
-  roles:
-    - role: tehtbl.bootstrap
-    - role: tehtbl.{{ role_name }}
-      {{ role_name }}_parameter: value
 ```
+
+{% if prepare.content is defined %}
+The machine you are running this on, may need to be prepared, I use this playbook to ensure everything is in place to let the role work.
+```yaml
+{{ prepare.content | b64decode | regex_replace('ansible-role-', 'tehtbl.') }}
+
+```
+{% endif %}
 
 Role Variables
 ==============
 
-<There are no default role variables set.>
-
+{% if variables.content is defined %}
 These variables are set in `defaults/main.yml`:
 
 ```yaml
----
-# ------------------------------------------------------------------------
-# defaults file for {{ role_name }}
-# ------------------------------------------------------------------------
-
+{{ variables.content | b64decode }}
 
 ```
+{% else %}
+There are no default role variables set.
+{% endif %}
 
 Requirements
 ============
 
 - Access to a repository containing packages, likely on the internet.
-- A recent version of Ansible (Tests run on the current, previous and next release of Ansible).
+- A recent version of Ansible. (Tests run on the current, previous and next release of Ansible.)
 
+{% if requirements.content is defined %}
 The following roles can be installed to ensure all requirements are met, using `ansible-galaxy install -r requirements.yml`:
 
 ```yaml
----
-- tehtbl.bootstrap
+{{ requirements.content | b64decode }}
 
 ```
+{% endif %}
 
 Context
 =======
@@ -135,7 +131,7 @@ vagrant up
 License
 =======
 
-GNU General Public License v3.0
+MIT License
 
 Author Information
 ==================
