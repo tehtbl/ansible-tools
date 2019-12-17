@@ -1,0 +1,32 @@
+---
+galaxy_info:
+  author: https://github.com/tehtbl
+  role_name: {{ role_name }}
+  description: Install and configure {{ role_name }} on a system.
+  license: GNU General Public License v3.0
+  company: None
+  min_ansible_version: 2.8
+
+  platforms:
+    - name: Debian
+      versions:
+        - buster
+        - sid
+    - name: Ubuntu
+      versions:
+        - xenial
+        - bionic
+
+  galaxy_tags:
+    - {{ role_name }}
+    - installer
+    - client
+    - server
+    - system
+    - debian
+    - ubuntu
+    - linux
+
+dependencies:
+  - tehtbl.bootstrap
+{# this comment is needed for having a newline at EOF to pass yamllint tests #}

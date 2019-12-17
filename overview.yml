@@ -1,0 +1,21 @@
+---
+base_urls:
+  travis: https://travis-ci.org/tehtbl/{{ base_name }}
+  galaxy: https://galaxy.ansible.com/tehtbl/{{ role_name }}
+  github:
+    web: https://github.com/tehtbl/{{ base_name }}
+    git: git@github.com:tehtbl/{{ base_name }}.git
+
+roles:
+  - galaxy_id: 44496
+    role_name: "bootstrap"
+    base_name: "ansible-role-bootstrap"
+    description: Prepare your Debian and Ubuntu Systems for Ansible.
+    requirements: []
+  - galaxy_id: 44923
+    role_name: "common"
+    base_name: "ansible-role-common"
+    description: Configure all common things on your system.
+    requirements:
+      - tehtbl.bootstrap
+      - tehtbl.reboot
