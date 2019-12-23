@@ -47,14 +47,17 @@ if __name__ == "__main__":
     parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False, help="be verbose")
 
     parser.add_option("-a", "--all", action="store_true", dest="gen_all", default=False, help="generate all files")
-    parser.add_option("-r", "--readme", action="store_true", dest="gen_readme", default=False, help="generate only README")
-    parser.add_option("-r", "--readme", action="store_true", dest="gen_readme", default=False, help="generate only README")
-    parser.add_option("-r", "--readme", action="store_true", dest="gen_readme", default=False, help="generate only README")
-    parser.add_option("-r", "--readme", action="store_true", dest="gen_readme", default=False, help="generate only README")
-    parser.add_option("-r", "--readme", action="store_true", dest="gen_readme", default=False, help="generate only README")
-    parser.add_option("-r", "--readme", action="store_true", dest="gen_readme", default=False, help="generate only README")
-
-
+    parser.add_option("-g", "--github", action="store_true", dest="gen_gh", default=False, help="generate only .github/ files")
+    parser.add_option("-m", "--meta", action="store_true", dest="gen_meta", default=False, help="generate meta/ files only")
+    parser.add_option("-t", "--travis", action="store_true", dest="gen_travis", default=False, help="generate .travis.yml file only")
+    parser.add_option("-c", "--coc", action="store_true", dest="gen_coc", default=False, help="generate CODE_OF_CONDUCT.md file only")
+    parser.add_option("-n", "--contributing", action="store_true", dest="gen_cont", default=False, help="generate CONTRIBUTING.md file only")
+    parser.add_option("-l", "--license", action="store_true", dest="gen_license", default=False, help="generate LICENSE file only")
+    parser.add_option("-p", "--pr", action="store_true", dest="gen_pr", default=False, help="generate PR file only")
+    parser.add_option("-r", "--readme", action="store_true", dest="gen_readme", default=False, help="generate README.md file only")
+    parser.add_option("-s", "--security", action="store_true", dest="gen_security", default=False, help="generate SECURITY.md file only")
+    parser.add_option("-x", "--tox", action="store_true", dest="gen_tox", default=False, help="generate tox.ini file only")
+    parser.add_option("-y", "--vagrant", action="store_true", dest="gen_vagrant", default=False, help="generate Vagrantfile file only")
 
     (options, args) = parser.parse_args()
 
@@ -88,7 +91,7 @@ if __name__ == "__main__":
 
     # TODO: init Jinja environment
 
-    # 
+    #
 
     # generate README.md
     if options.gen_all or options.gen_readme:
