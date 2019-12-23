@@ -46,6 +46,16 @@ if __name__ == "__main__":
 
     parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False, help="be verbose")
 
+    parser.add_option("-a", "--all", action="store_true", dest="gen_all", default=False, help="generate all files")
+    parser.add_option("-r", "--readme", action="store_true", dest="gen_readme", default=False, help="generate only README")
+    parser.add_option("-r", "--readme", action="store_true", dest="gen_readme", default=False, help="generate only README")
+    parser.add_option("-r", "--readme", action="store_true", dest="gen_readme", default=False, help="generate only README")
+    parser.add_option("-r", "--readme", action="store_true", dest="gen_readme", default=False, help="generate only README")
+    parser.add_option("-r", "--readme", action="store_true", dest="gen_readme", default=False, help="generate only README")
+    parser.add_option("-r", "--readme", action="store_true", dest="gen_readme", default=False, help="generate only README")
+
+
+
     (options, args) = parser.parse_args()
 
     # print_warn("test")
@@ -68,7 +78,7 @@ if __name__ == "__main__":
             print_error("working directory is empty ... exiting")
             sys.exit(1)
     else:
-        print_error("working directory don't exists ... exiting")
+        print_error("working directory doesn't exist ... exiting")
         sys.exit(1)
 
     if options.verbose:
@@ -76,3 +86,10 @@ if __name__ == "__main__":
 
     print_log("all requirements set, starting to fly...")
 
+    # TODO: init Jinja environment
+
+    # 
+
+    # generate README.md
+    if options.gen_all or options.gen_readme:
+        pass
