@@ -1,8 +1,8 @@
 ---
 galaxy_info:
   author: https://github.com/tehtbl
-  role_name: {{ role_name }}
-  description: {{ description }}
+  role_name: {{ role.name }}
+  description: {{ role.desc }}
   license: MIT License
   company: None
   min_ansible_version: 2.8
@@ -29,5 +29,6 @@ galaxy_info:
     - linux
 
 dependencies:
-  - tehtbl.bootstrap
-{# this comment is needed for having a newline at EOF to pass yamllint tests #}
+  {% for r in role.reqs %}
+  - {{ r }}
+  {% endfor %}
