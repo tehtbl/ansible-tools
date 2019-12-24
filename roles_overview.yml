@@ -1,14 +1,14 @@
 ---
 urls:
-  travis: https://travis-ci.org/tehtbl/{{ base_name }}
+  travis: https://travis-ci.org/tehtbl/ansible-role-{{ role_name }}
   galaxy: https://galaxy.ansible.com/tehtbl/{{ role_name }}
   github:
-    web: https://github.com/tehtbl/{{ base_name }}
-    git: git@github.com:tehtbl/{{ base_name }}.git
+    web: https://github.com/tehtbl/ansible-role-{{ role_name }}
+    git: git@github.com:tehtbl/ansible-role-{{ role_name }}.git
 
 roles:
   - galaxy_id: 45211
-    role_name: "base_packages"
+    role_name: base_packages
     description: Install and configure base packages on your system.
     requirements:
       - tehtbl.bootstrap
@@ -17,14 +17,14 @@ roles:
     tags: []
 
   - galaxy_id: 44496
-    role_name: "bootstrap"
+    role_name: bootstrap
     description: Prepare your Debian and Ubuntu Systems for Ansible.
     requirements: []
     tags:
       - bootstrap
 
   - galaxy_id: 44923
-    role_name: "common"
+    role_name: common
     description: Configure all common things on your system.
     requirements:
       - tehtbl.bootstrap
@@ -32,7 +32,7 @@ roles:
     tags: []
 
   - galaxy_id: 44971
-    role_name: "cron"
+    role_name: cron
     description: Install cron and schedule jobs on a system.
     requirements:
       - tehtbl.bootstrap
@@ -41,7 +41,7 @@ roles:
       - schedule
 
   - galaxy_id: 45338
-    role_name: "deployment_user"
+    role_name: deployment_user
     description: Install and configure a special deployment user on your system.
     requirements:
       - tehtbl.bootstrap
@@ -50,7 +50,7 @@ roles:
       - deployment
 
   - galaxy_id: 44972
-    role_name: "ntp"
+    role_name: ntp
     description: Install and configure NTP on your system.
     requirements:
       - tehtbl.bootstrap
@@ -60,7 +60,7 @@ roles:
       - ntpd
 
   - galaxy_id: 44922
-    role_name: "reboot"
+    role_name: reboot
     description: Reboot your system if needed.
     requirements:
       - tehtbl.bootstrap
@@ -68,7 +68,7 @@ roles:
       - reboot
 
   - galaxy_id: 45336
-    role_name: "ssh_server"
+    role_name: ssh_server
     description: Install and configure an openssh-server on your system.
     requirements:
       - tehtbl.bootstrap
@@ -77,7 +77,7 @@ roles:
       - sshd
 
   - galaxy_id: 45034
-    role_name: "swap"
+    role_name: swap
     description: Install and configure a swap space on your system.
     requirements:
       - tehtbl.bootstrap
@@ -85,7 +85,7 @@ roles:
       - swap
 
   - galaxy_id: 44969
-    role_name: "update"
+    role_name: update
     description: Install updates on your system.
     requirements:
       - tehtbl.bootstrap
