@@ -16,19 +16,20 @@ galaxy_info:
       versions:
         - xenial
         - bionic
-
-  galaxy_tags:
-    {% for t in tags %}
-    - {{ t }}
-    {% endfor %}
+{% if role.tags|length > 0 %}
+  galaxy_tags:{% for t in role.tags %}
+    - {{ t }}{% endfor %}{% else %}
+  galaxy_tags:{% endif %}
     - client
     - server
     - system
     - debian
     - ubuntu
     - linux
-
+{% if role.reqs|length > 0 %}
 dependencies:
-  {% for r in role.reqs %}
-  - {{ r }}
-  {% endfor %}
+  {% for r in role.reqs %}- {{ r }}{% endfor %}
+{% else %}
+dependencies: []
+{% endif %}
+

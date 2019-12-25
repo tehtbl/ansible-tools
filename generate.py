@@ -3,6 +3,7 @@
 import os
 import sys
 import yaml
+import shutil
 import jinja2
 import pprint
 import colorama
@@ -48,62 +49,76 @@ def get_jinja_env(local_tmpl_dir):
 
 
 #
+# write out template to file
+#
+def write_tmpl_to_file(src, dst):
+    pass
+
+
+#
 # MAiN
 #
 if __name__ == "__main__":
 
     parser = OptionParser()
 
-    parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False, help="be verbose")
+    parser.add_option("-r", "--role-dir",     type="string",       dest="role_dir",     metavar="DIR", help="work on role directory")
 
-    parser.add_option("-r", "--role-dir", dest="role_dir", type="string", help="work on role directory", metavar="DIR")
-    parser.add_option("-a", "--gen-all", action="store_true", dest="gen_all", default=False, help="generate all files")
+    parser.add_option("-v", "--verbose",      action="store_true", dest="verbose",      default=False, help="be verbose")
+    parser.add_option("-a", "--gen-all",      action="store_true", dest="gen_all",      default=False, help="generate all files")
 
-    parser.add_option("-g", "--github", action="store_true", dest="gen_gh", default=False, help="generate only .github/ files")
-    parser.add_option("-m", "--meta", action="store_true", dest="gen_meta", default=False, help="generate meta/ files only")
-    parser.add_option("-t", "--travis", action="store_true", dest="gen_travis", default=False, help="generate .travis.yml file only")
-    parser.add_option("-c", "--coc", action="store_true", dest="gen_coc", default=False, help="generate CODE_OF_CONDUCT.md file only")
-    parser.add_option("-n", "--contributing", action="store_true", dest="gen_cont", default=False, help="generate CONTRIBUTING.md file only")
-    parser.add_option("-l", "--license", action="store_true", dest="gen_license", default=False, help="generate LICENSE file only")
-    parser.add_option("-p", "--pr", action="store_true", dest="gen_pr", default=False, help="generate PR file only")
-    parser.add_option("-e", "--readme", action="store_true", dest="gen_readme", default=False, help="generate README.md file only")
-    parser.add_option("-s", "--security", action="store_true", dest="gen_security", default=False, help="generate SECURITY.md file only")
-    parser.add_option("-x", "--tox", action="store_true", dest="gen_tox", default=False, help="generate tox.ini file only")
-    parser.add_option("-y", "--vagrant", action="store_true", dest="gen_vagrant", default=False, help="generate Vagrantfile file only")
+    parser.add_option("-g", "--github",       action="store_true", dest="gen_gh",       default=False, help="generate only .github/ files")
+    parser.add_option("-m", "--meta",         action="store_true", dest="gen_meta",     default=False, help="generate meta/ files only")
+    parser.add_option("-t", "--travis",       action="store_true", dest="gen_travis",   default=False, help="generate .travis.yml file only")
+    parser.add_option("-c", "--coc",          action="store_true", dest="gen_coc",      default=False, help="generate CODE_OF_CONDUCT.md file only")
+    parser.add_option("-n", "--contributing", action="store_true", dest="gen_cont",     default=False, help="generate CONTRIBUTING.md file only")
+    parser.add_option("-l", "--license",      action="store_true", dest="gen_license",  default=False, help="generate LICENSE file only")
+    parser.add_option("-p", "--pr",           action="store_true", dest="gen_pr",       default=False, help="generate PR file only")
+    parser.add_option("-e", "--readme",       action="store_true", dest="gen_readme",   default=False, help="generate README.md file only")
+    parser.add_option("-s", "--security",     action="store_true", dest="gen_security", default=False, help="generate SECURITY.md file only")
+    parser.add_option("-x", "--tox",          action="store_true", dest="gen_tox",      default=False, help="generate tox.ini file only")
+    parser.add_option("-y", "--vagrant",      action="store_true", dest="gen_vagrant",  default=False, help="generate Vagrantfile file only")
 
     (options, args) = parser.parse_args()
 
-    # check for role overview file
-    try:
-        with open(options.roleoverviewfile) as file:
-            ALL_ROLES = yaml.load(file, Loader=yaml.FullLoader)
-    except Exception:
-        print_error("Error reading overview file ... Exiting.")
-        sys.exit(1)
+    # check if role_dir exists
+    ROLE_DIR = ""
+    if options.role_dir:
+        # ROLE_DIR = os.path.abspath(options.role_dir)
+        ROLE_DIR = options.role_dir
+        ROLE_INFO_FILE = os.path.join(ROLE_DIR, ".role_info.yml")
 
-    if options.verbose:
-        print_log("Overview:")
-        pp.pprint(ALL_ROLES)
-
-    # check for role dir
-    if options.roledir:
-        if os.path.exists(options.roledir) and os.path.isdir(options.roledir):
-            if not os.listdir(options.roledir):
-                print_error("working directory is empty ... exiting")
+        if os.path.exists(ROLE_DIR) and os.path.isdir(ROLE_DIR):
+            if not os.listdir(ROLE_DIR):
+                print_error("role dir {} is empty. Exiting.".format(ROLE_DIR))
                 sys.exit(1)
         else:
-            print_error("working directory doesn't exist ... exiting")
+            print_error("role dir {} doesn't exist. Exiting.".format(ROLE_DIR))
             sys.exit(1)
+
+        if not os.path.isfile(ROLE_INFO_FILE):
+            print_error("No .role_info.yml found in {}. Exiting.".format(ROLE_DIR))
+            sys.exit(1)
+
     else:
-        print_error("no working dir given ... exiting")
+        print_error("No role_dir given, use -r/--role_dir <dir of role to work on>. Exiting.")
+        sys.exit(1)
+
+    # get info for role
+    try:
+        with open(ROLE_INFO_FILE) as file:
+            ROLE_INFO = yaml.load(file, Loader=yaml.FullLoader)
+    except Exception:
+        print_error("Error reading role info file. Exiting.")
         sys.exit(1)
 
     if options.verbose:
-        print_log("working dir is ready for take off")
+        print_log("role info:")
+        pp.pprint(ROLE_INFO)
 
     print_log("all requirements set, starting to fly...")
 
-    # init Jinja environment
+    # init Jinja2 environment
     tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
     print_log("using templates from {}".format(tmpl_dir))
     jinja_env = get_jinja_env(tmpl_dir)
@@ -112,22 +127,69 @@ if __name__ == "__main__":
     if options.gen_all or options.gen_gh:
         print_log("generating github files")
 
-        # gh_dir = os.path.join(tmpl_dir, ".github")
-        gh_dir = ".github"
-        gh_it_dir = os.path.join(gh_dir, "ISSUE_TEMPLATE")
+        src_gh_dir = ".github"
+        # src_gh_dir = os.path.join(tmpl_dir, ".github")
+        src_gh_it_dir = os.path.join(src_gh_dir, "ISSUE_TEMPLATE")
 
-        tmpl = jinja_env.get_template(os.path.join(gh_it_dir, "bug_report.md.j2"))
-        for r in ALL_ROLES['roles']:
-            out = tmpl.render({'role': r}).encode('utf-8')
-            print(out)
+        dst_gh_dir = os.path.join(ROLE_DIR, ".github")
+        dst_gh_it_dir = os.path.join(dst_gh_dir, "ISSUE_TEMPLATE")
 
-        tmpl = jinja_env.get_template(os.path.join(gh_dir, "settings.yml.j2"))
-        for r in ALL_ROLES['roles']:
-            out = tmpl.render({'role': r}).encode('utf-8')
-            print(out)
+        os.makedirs(dst_gh_it_dir, exist_ok=True)
 
-        # fd = open(os.path.join(django_swrts_settings.SWRTS_PRJ_REPORT_CUST_DIR, 'base_information.tex'), 'w')
-        # fd.write(out)
-        # fd.close()
+        fn = "bug_report.md"
+        src_file = jinja_env.get_template(os.path.join(src_gh_it_dir, fn + ".j2"))
+        dst_file = os.path.join(dst_gh_it_dir, fn)
+
+        with open(dst_file, "w") as fh:
+            fh.write(
+                src_file.render({
+                    'role': ROLE_INFO
+                })
+            )
+
+        print_warn("creating {}".format(dst_file))
+
+        fn = "feature_request.md"
+        src_file = os.path.join(os.path.join(os.path.join(tmpl_dir, ".github"), "ISSUE_TEMPLATE"), fn)
+        dst_file = os.path.join(dst_gh_it_dir, fn)
+
+        shutil.copyfile(src_file, dst_file)
+
+        print_warn("creating {}".format(dst_file))
+
+        fn = "settings.yml"
+        src_file = jinja_env.get_template(os.path.join(src_gh_dir, fn + ".j2"))
+        dst_file = os.path.join(dst_gh_dir, fn)
+
+        with open(dst_file, "w") as fh:
+            fh.write(
+                src_file.render({
+                    'role': ROLE_INFO
+                })
+            )
+
+        print_warn("creating {}".format(dst_file))
+
+    # generate meta files
+    if options.gen_all or options.gen_meta:
+        print_log("generating meta files")
+
+        src_dir = "meta"
+        dst_dir = os.path.join(ROLE_DIR, "meta")
+
+        os.makedirs(dst_dir, exist_ok=True)
+
+        fn = "main.yml"
+        src_file = jinja_env.get_template(os.path.join(src_dir, fn + ".j2"))
+        dst_file = os.path.join(dst_dir, fn)
+
+        with open(dst_file, "w") as fh:
+            fh.write(
+                src_file.render({
+                    'role': ROLE_INFO
+                })
+            )
+
+        print_warn("creating {}".format(dst_file))
 
     sys.exit(0)
