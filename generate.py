@@ -19,7 +19,7 @@ pp = pprint.PrettyPrinter(indent=4)
 # prints
 #
 def print_warn(text=""):
-    print("[{}] {}".format(Fore.GREEN + "W" + Style.RESET_ALL, text))
+    print("[{}] {}".format(Fore.ORANGE + "W" + Style.RESET_ALL, text))
 
 
 def print_error(text=""):
@@ -27,7 +27,11 @@ def print_error(text=""):
 
 
 def print_log(text=""):
-    print("[{}] {}".format(Fore.YELLOW + ">" + Style.RESET_ALL, text))
+    print("[{}] {}".format(Fore.GREEN + ">" + Style.RESET_ALL, text))
+
+
+def print_info(text=""):
+    print("[{}] {}".format(Fore.YELLOW + "*" + Style.RESET_ALL, text))
 
 
 #
@@ -116,11 +120,11 @@ if __name__ == "__main__":
         print_log("role info:")
         pp.pprint(ROLE_INFO)
 
-    print_log("all requirements set, starting to fly...")
+    print_info("all requirements set, starting to fly...")
 
     # init Jinja2 environment
     tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
-    print_log("using templates from {}".format(tmpl_dir))
+    print_info("using templates from {}".format(tmpl_dir))
     jinja_env = get_jinja_env(tmpl_dir)
 
     # generate github files
@@ -147,7 +151,7 @@ if __name__ == "__main__":
                 })
             )
 
-        print_warn("creating {}".format(dst_file))
+        print_info("creating {}".format(dst_file))
 
         fn = "feature_request.md"
         src_file = os.path.join(os.path.join(os.path.join(tmpl_dir, ".github"), "ISSUE_TEMPLATE"), fn)
@@ -155,7 +159,7 @@ if __name__ == "__main__":
 
         shutil.copyfile(src_file, dst_file)
 
-        print_warn("creating {}".format(dst_file))
+        print_info("creating {}".format(dst_file))
 
         fn = "settings.yml"
         src_file = jinja_env.get_template(os.path.join(src_gh_dir, fn + ".j2"))
@@ -168,7 +172,7 @@ if __name__ == "__main__":
                 })
             )
 
-        print_warn("creating {}".format(dst_file))
+        print_info("creating {}".format(dst_file))
 
     # generate meta files
     if options.gen_all or options.gen_meta:
@@ -190,6 +194,39 @@ if __name__ == "__main__":
                 })
             )
 
-        print_warn("creating {}".format(dst_file))
+        print_info("creating {}".format(dst_file))
 
+    # generate travis file
+    if options.gen_all or options.gen_travis:
+        print_log("generating travis file")
+
+        src_dir = "."
+        dst_dir = ROLE_DIR
+
+        fn = ".travis.yml"
+        src_file = jinja_env.get_template(os.path.join(src_dir, fn + ".j2"))
+        dst_file = os.path.join(dst_dir, fn)
+
+        with open(dst_file, "w") as fh:
+            fh.write(
+                src_file.render({
+                    'role': ROLE_INFO
+                })
+            )
+
+        print_info("creating {}".format(dst_file))
+
+    # generate COC file
+    if options.gen_all or options.gen_coc:
+        print_log("generating coc file")
+
+        fn = "CODE_OF_CONDUCT.md"
+        src_file = os.path.join(tmpl_dir, fn)
+        dst_file = os.path.join(ROLE_DIR, fn)
+
+        shutil.copyfile(src_file, dst_file)
+
+        print_info("creating {}".format(dst_file))
+
+    # exit 0
     sys.exit(0)
