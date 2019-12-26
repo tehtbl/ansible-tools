@@ -55,8 +55,30 @@ def get_jinja_env(local_tmpl_dir):
 #
 # write out template to file
 #
-def write_tmpl_to_file(src, dst):
-    pass
+def write_tmpl_to_file(src, dst, fn):
+    src_file = jinja_env.get_template(os.path.join(src, fn + ".j2"))
+    dst_file = os.path.join(dst, fn)
+
+    os.makedirs(dst, exist_ok=True)
+
+    with open(dst_file, "w") as fh:
+        fh.write(
+            src_file.render({
+                'role': ROLE_INFO
+            })
+        )
+
+    print_info("created {}".format(dst_file))
+
+
+#
+# simply copy a file
+#
+def copy_file(src, dst, fn):
+    src_file = os.path.join(src, fn)
+    dst_file = os.path.join(dst, fn)
+    shutil.copyfile(src_file, dst_file)
+    print_info("created {}".format(dst_file))
 
 
 #
@@ -178,55 +200,102 @@ if __name__ == "__main__":
     if options.gen_all or options.gen_meta:
         print_log("generating meta files")
 
-        src_dir = "meta"
-        dst_dir = os.path.join(ROLE_DIR, "meta")
-
-        os.makedirs(dst_dir, exist_ok=True)
-
-        fn = "main.yml"
-        src_file = jinja_env.get_template(os.path.join(src_dir, fn + ".j2"))
-        dst_file = os.path.join(dst_dir, fn)
-
-        with open(dst_file, "w") as fh:
-            fh.write(
-                src_file.render({
-                    'role': ROLE_INFO
-                })
-            )
-
-        print_info("creating {}".format(dst_file))
+        write_tmpl_to_file(
+            "meta",
+            os.path.join(ROLE_DIR, "meta"),
+            "main.yml"
+        )
 
     # generate travis file
     if options.gen_all or options.gen_travis:
         print_log("generating travis file")
 
-        src_dir = "."
-        dst_dir = ROLE_DIR
-
-        fn = ".travis.yml"
-        src_file = jinja_env.get_template(os.path.join(src_dir, fn + ".j2"))
-        dst_file = os.path.join(dst_dir, fn)
-
-        with open(dst_file, "w") as fh:
-            fh.write(
-                src_file.render({
-                    'role': ROLE_INFO
-                })
-            )
-
-        print_info("creating {}".format(dst_file))
+        write_tmpl_to_file(
+            ".",
+            ROLE_DIR,
+            ".travis.yml"
+        )
 
     # generate COC file
     if options.gen_all or options.gen_coc:
         print_log("generating coc file")
 
-        fn = "CODE_OF_CONDUCT.md"
-        src_file = os.path.join(tmpl_dir, fn)
-        dst_file = os.path.join(ROLE_DIR, fn)
+        copy_file(
+            tmpl_dir,
+            ROLE_DIR,
+            "CODE_OF_CONDUCT.md"
+        )
 
-        shutil.copyfile(src_file, dst_file)
+    # generate contributing file
+    if options.gen_all or options.gen_cont:
+        print_log("generating contributing file")
 
-        print_info("creating {}".format(dst_file))
+        copy_file(
+            tmpl_dir,
+            ROLE_DIR,
+            "CONTRIBUTING.md"
+        )
+
+    # generate license file
+    if options.gen_all or options.gen_license:
+        print_log("generating license file")
+
+        copy_file(
+            tmpl_dir,
+            ROLE_DIR,
+            "LICENSE"
+        )
+
+    # generate PR file
+    if options.gen_all or options.gen_pr:
+        print_log("generating PR file")
+
+        copy_file(
+            tmpl_dir,
+            ROLE_DIR,
+            "PULL_REQUEST_TEMPLATE.md"
+        )
+
+    # generate README file
+    if options.gen_all or options.gen_readme:
+        print_log("generating README file")
+
+        # TODO: finalize generation
+        write_tmpl_to_file(
+            ".",
+            ROLE_DIR,
+            "README.md"
+        )
+
+    # generate SECURITY file
+    if options.gen_all or options.gen_security:
+        print_log("generating SECURITY file")
+
+        write_tmpl_to_file(
+            ".",
+            ROLE_DIR,
+            "SECURITY.md"
+        )
+
+    # generate tox file
+    if options.gen_all or options.gen_tox:
+        print_log("generating tox file")
+
+        copy_file(
+            tmpl_dir,
+            ROLE_DIR,
+            "tox.ini"
+        )
+
+    # generate Vagrantfile
+    if options.gen_all or options.gen_vagrant:
+        print_log("generating Vagrantfile")
+
+        write_tmpl_to_file(
+            ".",
+            ROLE_DIR,
+            "Vagrantfile"
+        )
 
     # exit 0
     sys.exit(0)
