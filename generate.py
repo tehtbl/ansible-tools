@@ -47,6 +47,7 @@ def get_jinja_env(local_tmpl_dir):
 
     jinja_env.globals.update(
         strfmtdate=lambda d, lang: d.strftime('%d.%m.%Y') if lang is 'deutsch' else d.strftime('%Y-%m-%d'),
+        regex_replace=lambda s, x, y: s.replaceAll(x, y)
     )
 
     return jinja_env
@@ -260,7 +261,31 @@ if __name__ == "__main__":
     if options.gen_all or options.gen_readme:
         print_log("generating README file")
 
-        # TODO: finalize generation
+        # ROLE_INFO['example'] = ""
+        # ROLE_INFO['prepare'] = ""
+        # ROLE_INFO['vars'] = ""
+
+        try:
+            fn = os.path.join(os.path.join(os.path.join(ROLE_DIR, "molecule"), "default"), "playbook.yml")
+            with open(fn, "r") as fh:
+                ROLE_INFO['example'] = fh.read()
+        except:
+            pass
+
+        try:
+            fn = os.path.join(os.path.join(os.path.join(ROLE_DIR, "molecule"), "default"), "prepare.yml")
+            with open(fn, "r") as fh:
+                ROLE_INFO['prepare'] = fh.read()
+        except:
+            pass
+
+        try:
+            fn = os.path.join(os.path.join(ROLE_DIR, "defaults"), "main.yml")
+            with open(fn, "r") as fh:
+                ROLE_INFO['vars'] = fh.read()
+        except:
+            pass
+
         write_tmpl_to_file(
             ".",
             ROLE_DIR,

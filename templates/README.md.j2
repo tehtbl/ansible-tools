@@ -12,46 +12,36 @@ Example Playbook
 This example is taken from `molecule/default/playbook.yml` and is tested on each push, pull request and release.
 
 ```yaml
-{{ example.content | b64decode | regex_replace('ansible-role-', 'tehtbl.') }}
+{{ role.example | replace('    - ', '    - tehtbl.') }}
+```{% if role.prepare is defined %}
 
-```
-
-{% if prepare.content is defined %}
 The machine you are running this on, may need to be prepared, I use this playbook to ensure everything is in place to let the role work.
-```yaml
-{{ prepare.content | b64decode | regex_replace('ansible-role-', 'tehtbl.') }}
 
-```
-{% endif %}
+```yaml
+{{ role.prepare | replace('    - ', '    - tehtbl.') }}
+```{% endif %}
 
 Role Variables
 ==============
 
-{% if variables.content is defined %}
-These variables are set in `defaults/main.yml`:
+{% if role.vars is defined %}These variables are set in `defaults/main.yml`:
 
 ```yaml
-{{ variables.content | b64decode }}
-
-```
-{% else %}
-There are no default role variables set.
-{% endif %}
+{{ role.vars }}
+```{% else %}There are no default role variables set.{% endif %}
 
 Requirements
 ============
 
 - Access to a repository containing packages, likely on the internet.
-- A recent version of Ansible. (Tests run on the current, previous and next release of Ansible.)
+- A recent version of Ansible. (Tests run on the current, previous and next release of Ansible.){% if role.reqs|length > 0 %}
 
-{% if requirements.content is defined %}
 The following roles can be installed to ensure all requirements are met, using `ansible-galaxy install -r requirements.yml`:
 
 ```yaml
-{{ requirements.content | b64decode }}
-
-```
-{% endif %}
+{% for r in role.reqs %}- {{ r }}
+{% endfor %}
+```{% endif %}
 
 Context
 =======
@@ -143,4 +133,4 @@ Sources
 
 This work is based on the great work of many people, e.g. [robertdebock](https://github.com/robertdebock) and [geerlingguy](https://github.com/geerlingguy). Thank you!
 
-{# this comment is needed for having a newline at EOF to pass yamllint tests #
+{# this comment is needed for having a newline at EOF to pass yamllint tests #}
