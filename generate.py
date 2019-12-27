@@ -98,13 +98,14 @@ if __name__ == "__main__":
     parser.add_option("-m", "--meta",         action="store_true", dest="gen_meta",     default=False, help="generate meta/ files only")
     parser.add_option("-t", "--travis",       action="store_true", dest="gen_travis",   default=False, help="generate .travis.yml file only")
     parser.add_option("-c", "--coc",          action="store_true", dest="gen_coc",      default=False, help="generate CODE_OF_CONDUCT.md file only")
-    parser.add_option("-n", "--contributing", action="store_true", dest="gen_cont",     default=False, help="generate CONTRIBUTING.md file only")
+    parser.add_option("-n", "--contrib",      action="store_true", dest="gen_contrib",     default=False, help="generate CONTRIBUTING.md file only")
     parser.add_option("-l", "--license",      action="store_true", dest="gen_license",  default=False, help="generate LICENSE file only")
     parser.add_option("-p", "--pr",           action="store_true", dest="gen_pr",       default=False, help="generate PR file only")
     parser.add_option("-e", "--readme",       action="store_true", dest="gen_readme",   default=False, help="generate README.md file only")
     parser.add_option("-s", "--security",     action="store_true", dest="gen_security", default=False, help="generate SECURITY.md file only")
     parser.add_option("-x", "--tox",          action="store_true", dest="gen_tox",      default=False, help="generate tox.ini file only")
     parser.add_option("-y", "--vagrant",      action="store_true", dest="gen_vagrant",  default=False, help="generate Vagrantfile file only")
+    parser.add_option("-d", "--deps",         action="store_true", dest="gen_deps",     default=False, help="generate requirements.txt file only")
 
     (options, args) = parser.parse_args()
 
@@ -228,7 +229,7 @@ if __name__ == "__main__":
         )
 
     # generate contributing file
-    if options.gen_all or options.gen_cont:
+    if options.gen_all or options.gen_contrib:
         print_log("generating contributing file")
 
         copy_file(
@@ -321,6 +322,17 @@ if __name__ == "__main__":
             ROLE_DIR,
             "Vagrantfile"
         )
+
+    # generate requirements.yml
+    if options.gen_all or options.gen_deps:
+        print_log("generating requirements.yml")
+
+        if len(ROLE_INFO['deps']) > 0:
+            write_tmpl_to_file(
+                ".",
+                ROLE_DIR,
+                "requirements.yml"
+            )
 
     # exit 0
     sys.exit(0)
