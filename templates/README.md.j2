@@ -12,13 +12,13 @@ Example Playbook
 This example is taken from `molecule/default/playbook.yml` and is tested on each push, pull request and release.
 
 ```yaml
-{{ role.example | replace('    - ', '    - tehtbl.') }}
+{{ role.example | replace('    - role: ', '    - role: tehtbl.') }}
 ```{% if role.prepare is defined %}
 
 The machine you are running this on, may need to be prepared, I use this playbook to ensure everything is in place to let the role work.
 
 ```yaml
-{{ role.prepare | replace('    - ', '    - tehtbl.') }}
+{{ role.prepare }}
 ```{% endif %}
 
 Role Variables

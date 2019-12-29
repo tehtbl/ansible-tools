@@ -26,9 +26,10 @@ galaxy_info:
     - debian
     - ubuntu
     - linux
-{% if role.reqs|length > 0 %}
+{% if role.deps|length > 0 %}
 dependencies:
-  {% for r in role.reqs %}- {{ r }}{% endfor %}
+  {% for r in role.deps %}- {{ r }}
+  {% endfor %}
 {% else %}
 dependencies: []
 {% endif %}
