@@ -16,6 +16,7 @@ galaxy_info:
       versions:
         - xenial
         - bionic
+        - focal
 {% if role.tags|length > 0 %}
   galaxy_tags:{% for t in role.tags %}
     - {{ t }}{% endfor %}{% else %}
