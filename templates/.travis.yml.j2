@@ -10,7 +10,7 @@ python:
 
 env:
   global:
-    - ROLE_NAME: "bootstrap"
+    - ROLE_NAME: "{{ role.name }}"
     - NAMESPACE: "tehtbl"
   matrix:
     - IMAGE="debian" TAG="stable"

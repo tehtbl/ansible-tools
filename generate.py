@@ -267,7 +267,7 @@ if __name__ == "__main__":
         # ROLE_INFO['vars'] = ""
 
         try:
-            fn = os.path.join(os.path.join(os.path.join(ROLE_DIR, "molecule"), "default"), "playbook.yml")
+            fn = os.path.join(os.path.join(os.path.join(ROLE_DIR, "molecule"), "default"), "converge.yml")
             with open(fn, "r") as fh:
                 ROLE_INFO['example'] = fh.read()
         except:
